@@ -44,3 +44,9 @@ stop() {
   [ ! -f "${WOL_PID}" ] || rm -f "${WOL_PID}"
   sed -Ei "s/^description=(\[.*][[:space:]]*)?/description=[ ⏲ ${NOW} | ✘ wol shutting down, service is stopped!!! ] /g" "${MOD_PROP}"
 }
+
+case "$1" in
+start) start ;;
+stop) stop ;;
+status) status ;;
+esac
