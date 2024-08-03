@@ -34,8 +34,9 @@ jobs:
 
       - name: Package
         run: |
+          VERSION=$(awk -F "=" '/version=/ {print $2}' module.prop)
           mkdir -p build
-          zip -9 -r buld/wol-${GITHUB_REF#refs/tags/}-${{ matrix.job.name }}.zip . -x "*.git*" ".pre-commit-config.yaml" "*.zip" "build/*"
+          zip -9 -r buld/wol-${VERSION}-${{ matrix.job.name }}.zip . -x "*.git*" ".pre-commit-config.yaml" "*.zip" "build/*"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
