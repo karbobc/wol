@@ -1,7 +1,7 @@
 #!/system/bin/sh
 # shellcheck disable=SC1091,SC3034,SC3046
 
-source /data/adb/box/settings.sh
+source /data/adb/wol/settings.sh
 
 status() {
   pid=$(<"${WOL_PID}" 2>/dev/null)
@@ -23,7 +23,7 @@ start() {
     log info "Backup log file to ${WOL_LOG_FILE}.bak"
   fi
   # Running in backgroud
-  nohup "${WOL_BIN}" "${WOL_BIN_ARGS}" >"${WOL_LOG_FILE}" 2>&1 &
+  nohup "${WOL_BIN}" "${WOL_BIN_ARGS}" >>"${WOL_LOG_FILE}" 2>&1 &
   # Save the process ID to the pid file
   pid=$!
   echo ${pid} >"${WOL_PID}"
