@@ -22,25 +22,20 @@ jobs:
 
       - name: Get WOL tag
         run: |
-          echo "WOL_TAG=$(awk -F '=' '/version=/ {print $2}' module.prop | cut -d '.' -f 1-3)" >> $GITHUB_ENV
+          WOL_TAG=$(awk -F "=" '/version=/ {print $2}' module.prop | cut -d "." -f 1-3)
+          echo "WOL Tag: ${WOL_TAG}"
+          echo "WOL_TAG=${WOL_TAG}" >> $GITHUB_ENV
 
       - name: Download WOL
-        uses: robinraju/release-downloader@v1
-        with:
-          repository: nashaofu/wol
-          latest: false
-          tag: ${{ env.WOL_TAG }}
-          fileName: wol-${{ matrix.job.wol_platform }}*-musl.zip
-          out-file-path: wol/bin
-          tarBall: false
-          zipBall: true
-          extract: true
+        run: |
+          mkdir -p wol/bin
+          curl -LO https://github.com/nashaofu/wol/releases/download/${{ env.WOL_TAG }}/wol-${{ matrix.job.wol_platform }}-unknown-linux-musl.zip
+          unzip -jo wol-*.zip -d wol/bin
 
       - name: Package
         run: |
           mkdir -p build
-          mv -f wol/bin/wol-* wol/bin/wol
-          zip -9 -r buld/wol-${GITHUB_REF#refs/tags/}-${{ matrix.job.name }}.zip -x "*.git*" ".pre-commit-config.yaml" "build/*"
+          zip -9 -r buld/wol-${GITHUB_REF#refs/tags/}-${{ matrix.job.name }}.zip -x "*.git*" ".pre-commit-config.yaml" "*.zip" "build/*"
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
