@@ -52,6 +52,7 @@ ui_print "- Creating directories"
 mkdir -p "$service_dir" "$WOL_DIR" "$WOL_BIN_DIR" "$WOL_CONF_DIR" "$WOL_SCRIPTS_DIR"
 
 ui_print "- Extracting scripts"
+unzip -qqjo "$ZIPFILE" "wol/settings.sh" -d "$WOL_DIR"
 unzip -qqjo "$ZIPFILE" "wol/bin/*" -d "$WOL_BIN_DIR"
 unzip -qqjo "$ZIPFILE" "wol/conf/*" -d "$WOL_CONF_DIR"
 unzip -qqjo "$ZIPFILE" "wol/scripts/*" -d "$WOL_SCRIPTS_DIR"
