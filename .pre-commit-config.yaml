@@ -9,10 +9,14 @@ repos:
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.8.0-1
     hooks:
-      - id: shfmt-docker
+      - id: shfmt
         args: [-i, "2", -s, -w]
 
-  - repo: https://github.com/koalaman/shellcheck-precommit
-    rev: v0.10.0
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.10.0.1
     hooks:
       - id: shellcheck
+        exclude: |
+          (?x)^(
+            META-INF/com/google/android/update-binary
+          )$
