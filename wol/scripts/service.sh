@@ -22,8 +22,8 @@ start() {
     mv -f "${WOL_LOG_FILE}" "${WOL_LOG_FILE}.bak"
     log info "Backup log file to ${WOL_LOG_FILE}.bak"
   fi
-  # Running in backgroud
-  nohup busybox setuidgid "root:net_admin" "${WOL_BIN}" "${WOL_BIN_ARGS}" >>"${WOL_LOG_FILE}" 2>&1 &
+  # Running in background
+  nohup "${WOL_BIN}" "${WOL_BIN_ARGS}" >>"${WOL_LOG_FILE}" 2>&1 &
   # Save the process ID to the pid file
   pid=$!
   echo ${pid} >"${WOL_PID}"

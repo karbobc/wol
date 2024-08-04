@@ -18,7 +18,7 @@ MOD_PROP="${MOD_DIR}/module.prop"
 # Set wol basic configuration
 WOL_DIR="/data/adb/wol"
 WOL_BIN="${WOL_DIR}/bin/wol"
-WOL_BIN_ARGS="-c ${WOL_DIR}/conf/wol.yml"
+WOL_BIN_ARGS="--config=${WOL_DIR}/conf/wol.yml"
 WOL_SCRIPTS_DIR="${WOL_DIR}/scripts"
 WOL_RUN_DIR="${WOL_DIR}/run"
 WOL_LOG_FILE="${WOL_RUN_DIR}/wol.log"
