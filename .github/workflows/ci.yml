@@ -26,9 +26,9 @@ jobs:
           MOD_VERSION_CODE=$(awk -F "=" '/versionCode=/ {print $2}' module.prop)
           MOD_WOL_TAG=$(echo "${MOD_VERSION}" | cut -d "." -f 1-3)
           {
-            "MOD_VERSION=${MOD_VERSION}"
-            "MOD_VERSION_CODE=${MOD_VERSION_CODE}"
-            "MOD_WOL_TAG=${MOD_WOL_TAG}"
+            echo "MOD_VERSION=${MOD_VERSION}"
+            echo "MOD_VERSION_CODE=${MOD_VERSION_CODE}"
+            echo "MOD_WOL_TAG=${MOD_WOL_TAG}"
           } >> "${GITHUB_ENV}"
 
       - name: Download WOL
