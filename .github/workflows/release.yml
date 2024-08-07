@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   build:
+    name: Pre Build
     uses: ./.github/workflows/build.yml
 
   release:
@@ -64,7 +65,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            build/
+            build/*
           prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
 
   changelog:
