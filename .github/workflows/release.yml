@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Release - ${{ matrix.job.name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          name: ["x86_64", "arm64-v8a"]
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Get module property
+        run: |
+          MOD_VERSION=$(awk -F "=" '/version=/ {print $2}' module.prop)
+          MOD_VERSION_CODE=$(awk -F "=" '/versionCode=/ {print $2}' module.prop)
+          {
+            echo "MOD_VERSION=${MOD_VERSION}"
+            echo "MOD_VERSION_CODE=${MOD_VERSION_CODE}"
+          } >> "${GITHUB_ENV}"
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: wol-${{ env.MOD_VERSION }}-${{ matrix.job.name }}
+          path: artifact
+
+      - name: Generate update json
+        run: |
+          GH_RELEASE_PREFIX_URL="https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF#refs/tags/}"
+          echo "${GH_RELEASE_PREFIX_URL}/update-${{ matrix.job.name }}.json" >> artifact/module.prop
+          tee update-${{ matrix.job.name }}.json << EOF
+          {
+            "version": "${{ env.MOD_VERSION }}",
+            "versionCode": "${{ env.MOD_VERSION_CODE }}",
+            "zipUrl": "${GH_RELEASE_PREFIX_URL}/wol-${{ env.MOD_VERSION }}-${{ matrix.job.name }}.zip",
+            "changelog": "${GH_RELEASE_PREFIX_URL}/CHANGELOG.md"
+          }
+          EOF
+
+      - name: Package into zip file
+        run: |
+          mkdir -p build
+          mv update-${{ matrix.job.name }}.json build/
+          zip -9 -r build/wol-${{ env.MOD_VERSION }}-${{ matrix.job.name }}.zip artifact/
+
+      - name: Upload to GitHub release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            build/
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
+
+  changelog:
+    name: Changelog
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Build changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          outputFile: CHANGELOG.md
+          commitMode: true
+          configurationJson: |
+            {
+              "template": "#{{CHANGELOG}}",
+              "categories": [
+                {
+                  "title": "## What's Changed",
+                  "label": []
+                }
+              ]
+            }
+
+      - name: Upload to GitHub release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            CHANGELOG.md
+          prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') }}
+          body_path: CHANGELOG.md
+          generate_release_notes: true
