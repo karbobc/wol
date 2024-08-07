@@ -1,6 +1,6 @@
 id=wol
 name=WOL
-version=v0.0.8.1
-versionCode=00081
+version=v0.0.8.2
+versionCode=00082
 author=Karbob
 description=WOL, short for Wake-on-LAN, which allows a computer to be turned on or awakened from remotely in web.
