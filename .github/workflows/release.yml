@@ -57,7 +57,8 @@ jobs:
         run: |
           mkdir -p build
           mv update-${{ matrix.job.name }}.json build/
-          zip -9 -r build/wol-${{ env.MOD_VERSION }}-${{ matrix.job.name }}.zip artifact/
+          cd artifact
+          zip -9 -r ${{ github.workspace }}/build/wol-${{ env.MOD_VERSION }}-${{ matrix.job.name }}.zip .
 
       - name: Upload to GitHub release
         uses: softprops/action-gh-release@v2
