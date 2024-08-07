@@ -35,6 +35,10 @@ jobs:
           curl -LO https://github.com/nashaofu/wol/releases/download/${{ env.MOD_WOL_TAG }}/wol-${{ matrix.job.wol_platform }}-unknown-linux-musl.zip
           unzip -jo wol-*.zip -d wol/bin
 
+      - name: Append update json to module.prop
+        run: |
+          echo "updateJson=https://github.com/${{ github.repository }}/releases/latest/download/update-${{ matrix.job.name }}.json" >> module.prop
+
       - name: Package artifact
         run: |
           mkdir -p artifact

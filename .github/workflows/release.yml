@@ -44,7 +44,6 @@ jobs:
       - name: Generate update json
         run: |
           GH_RELEASE_PREFIX_URL="https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF#refs/tags/}"
-          echo "${GH_RELEASE_PREFIX_URL}/update-${{ matrix.job.name }}.json" >> artifact/module.prop
           tee update-${{ matrix.job.name }}.json << EOF
           {
             "version": "${{ env.MOD_VERSION }}",
